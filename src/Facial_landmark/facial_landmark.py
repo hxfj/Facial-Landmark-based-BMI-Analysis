@@ -4,8 +4,6 @@ import numpy as np
 import os
 from openpyxl import Workbook
 
-# mp_drawing = mp.solutions.drawing_utils
-# mp_drawing_styles = mp.solutions.drawing_styles
 mp_face_mesh = mp.solutions.face_mesh
 
 def create_faciallandmark():
@@ -33,20 +31,6 @@ class Faciallandmark:
                 print('Face detection failed.')
                 return []
             
-    # def get_feature(self,imgpath):
-    #     coords = self.get_landmarks(imgpath)
-    #     if len(coords) != 0:
-    #         for i in coords:
-    #             num_ex = str(num)
-    #             x = str(i.x)
-    #             y = str(i.y)
-    #             z = str(i.z)
-    #             row = [num_ex,x,y,z]
-    #             ws.append(row)
-    #             num += 1
-    #     else:
-    #         return []
-            # pass
             
     def get_landmarks_batching(self,directorypath):
         """
@@ -62,7 +46,6 @@ class Faciallandmark:
         ws['C1'] = 'Y'
         ws['D1'] = 'Z'
         for filename in os.listdir(directorypath):
-            #print(filename)  # 仅仅是为了测试
             num = 1
             face_file_path = (directorypath + "/" + filename)
             with mp_face_mesh.FaceMesh(static_image_mode=True,max_num_faces=1,refine_landmarks=True,min_detection_confidence=0.5) as face_mesh:

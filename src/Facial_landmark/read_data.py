@@ -19,8 +19,6 @@ class Readdata:
             BMI_feat_ref: Preprocessed landmark of template face.
         """
         if t_path == 'org':
-            # src\data
-            # src\Facial_landmark\read_data.py
             f_lm_ref=pd.read_excel(r'src/data/template_face.xlsx')# The template faces selected in our paper
         else:
             f_lm_ref=pd.read_excel(t_path)# The template faces selected in our paper

@@ -64,7 +64,7 @@ class Regressionmodel:
             X_train, X_test, Y_train, Y_test = train_test_split(x,y,test_size = 0.1)
             kernel = DotProduct() + WhiteKernel()
             gp = GaussianProcessRegressor(kernel=kernel)
-            gp.fit(X_train, Y_train.ravel())
+            gp.fit(X_train, Y_train)
             img_y = gp.predict(img_x)
             return img_y
         else:
@@ -77,7 +77,7 @@ class Regressionmodel:
             x,y = self.get_data()
             X_train, X_test, Y_train, Y_test = train_test_split(x,y,test_size = 0.1)
             reg = linear_model.LinearRegression()
-            reg.fit(X_train,Y_train.ravel())
+            reg.fit(X_train,Y_train)
             img_y = reg.predict(img_x)
             return img_y
         else:
@@ -93,7 +93,7 @@ class Regressionmodel:
                 hidden_layer_sizes=(100,50,30), activation='relu',solver='adam',
                 alpha=0.01,max_iter=500)
             
-            mlp.fit(X_train,Y_train.ravel())
+            mlp.fit(X_train,Y_train)
             img_y = mlp.predict(img_x)
             return img_y
         else:
