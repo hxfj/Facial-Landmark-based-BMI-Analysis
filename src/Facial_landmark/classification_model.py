@@ -60,8 +60,7 @@ class Classificationmodel:
             x,y = self.get_data()
             X_train, X_test, Y_train, Y_test = train_test_split(x,y,test_size = 0.1)
             gnb = GaussianNB()
-            gnb.fit(X_train,Y_train.ravel())
-            gnb.fit(X_train, Y_train.ravel())
+            gnb.fit(X_train, Y_train)
             img_y = gnb.predict(img_x)
             return img_y
         else:
@@ -75,7 +74,7 @@ class Classificationmodel:
             X_train, X_test, Y_train, Y_test = train_test_split(x,y,test_size = 0.1)
             svc = SVC(C=1.0, kernel='linear', degree=3, gamma=1, coef0=0.0, shrinking=True, probability=False,
                       tol=0.001, cache_size=200, class_weight=None, verbose=False, max_iter=-1, random_state=None) 
-            svc.fit(X_train, Y_train.ravel())
+            svc.fit(X_train, Y_train)
             img_y = svc.predict(img_x)
             return img_y
         else:
@@ -90,7 +89,7 @@ class Classificationmodel:
             mlp = MLPClassifier(hidden_layer_sizes=(100,50,30), activation='relu',solver='adam',
                                 alpha=0.01,max_iter=500)
             
-            mlp.fit(X_train,Y_train.ravel())
+            mlp.fit(X_train,Y_train)
             img_y = mlp.predict(img_x)
             return img_y
         else:
