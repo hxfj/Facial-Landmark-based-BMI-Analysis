@@ -1,21 +1,18 @@
 import numpy as np
 import os.path as path
 from Facial_landmark import read_data as RD
-from scipy.stats import pearsonr
-from sklearn.datasets import make_friedman2
-from sklearn import svm
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neural_network import MLPClassifier;
+from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
-from sklearn import linear_model
-from sklearn.neural_network import MLPRegressor
 
 
-def create_regressionmodel():
-    return Regressionmodel()
+def create_classificationmodel():
+    return Classificationmodel()
 
 
-class Regressionmodel:
+class Classificationmodel:
     def __init__(self) -> None:
         self.data_x = None
         self.data_y = None
@@ -26,17 +23,17 @@ class Regressionmodel:
         @brief: Using VIP dataset as an example
         @return:
             self.data_x: Landmarks(feature).
-            self.data_y: BMI value(label)
+            self.data_y: BMI type(label)
         """
         rd = RD.create_readdata()
         two_up =  path.abspath(path.join(__file__ ,"../../../paper_data"))
         featpath = (two_up+ "/"+'VIP_G_lm.xlsx' )
         bmipath = (two_up + "/" +'VIP_G_BMI.xlsx')
         self.data_x = rd.read_landmark(lm_path=featpath)
-        self.data_y = rd.read_bmi(bmi_path=bmipath)
+        self.data_y = rd.read_bmi(bmi_path=bmipath,type = 'type')
         return self.data_x,self.data_y
 
-    def SVR_mod(self,imgpath):
+    def RFC_mod(self,imgpath):
         """
         @brief: Use SVR to get BMI value
         @param: 
@@ -49,49 +46,49 @@ class Regressionmodel:
         if len(img_x) != 0:
             x,y = self.get_data()
             X_train, X_test, Y_train, Y_test = train_test_split(x,y,test_size = 0.1)
-            regr = svm.SVR(kernel='linear')
-            regr.fit(X_train, Y_train)
-            img_y = regr.predict(img_x)
+            rfc = RandomForestClassifier(max_depth=5)
+            rfc.fit(X_train,Y_train)
+            img_y = rfc.predict(img_x)
             return img_y
         else:
             return 0
 
-    def GPR_mod(self,imgpath):
+    def GNB_mod(self,imgpath):
         rd = RD.create_readdata()
         img_x = rd.get_image_x(imgpath)
         if len(img_x) != 0:
             x,y = self.get_data()
             X_train, X_test, Y_train, Y_test = train_test_split(x,y,test_size = 0.1)
-            kernel = DotProduct() + WhiteKernel()
-            gp = GaussianProcessRegressor(kernel=kernel)
-            gp.fit(X_train, Y_train.ravel())
-            img_y = gp.predict(img_x)
+            gnb = GaussianNB()
+            gnb.fit(X_train,Y_train.ravel())
+            gnb.fit(X_train, Y_train.ravel())
+            img_y = gnb.predict(img_x)
             return img_y
         else:
             return 0
 
-    def LSR_mod(self,imgpath):
+    def SVC_mod(self,imgpath):
         rd = RD.create_readdata()
         img_x = rd.get_image_x(imgpath)
         if len(img_x) != 0:
             x,y = self.get_data()
             X_train, X_test, Y_train, Y_test = train_test_split(x,y,test_size = 0.1)
-            reg = linear_model.LinearRegression()
-            reg.fit(X_train,Y_train.ravel())
-            img_y = reg.predict(img_x)
+            svc = SVC(C=1.0, kernel='linear', degree=3, gamma=1, coef0=0.0, shrinking=True, probability=False,
+                      tol=0.001, cache_size=200, class_weight=None, verbose=False, max_iter=-1, random_state=None) 
+            svc.fit(X_train, Y_train.ravel())
+            img_y = svc.predict(img_x)
             return img_y
         else:
             return 0
         
-    def MLPR_mod(self,imgpath):
+    def MLPC_mod(self,imgpath):
         rd = RD.create_readdata()
         img_x = rd.get_image_x(imgpath)
         if len(img_x) != 0:
             x,y = self.get_data()
             X_train, X_test, Y_train, Y_test = train_test_split(x,y,test_size = 0.1)
-            mlp = MLPRegressor(
-                hidden_layer_sizes=(100,50,30), activation='relu',solver='adam',
-                alpha=0.01,max_iter=500)
+            mlp = MLPClassifier(hidden_layer_sizes=(100,50,30), activation='relu',solver='adam',
+                                alpha=0.01,max_iter=500)
             
             mlp.fit(X_train,Y_train.ravel())
             img_y = mlp.predict(img_x)
