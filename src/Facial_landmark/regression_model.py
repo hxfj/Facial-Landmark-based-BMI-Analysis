@@ -9,7 +9,7 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
 from sklearn import linear_model
 from sklearn.neural_network import MLPRegressor
-
+import joblib
 
 def create_regressionmodel():
     return Regressionmodel()
@@ -36,63 +36,74 @@ class Regressionmodel:
         self.data_y = rd.read_bmi(bmi_path=bmipath)
         return self.data_x,self.data_y
 
-    def SVR_mod(self,imgpath):
+    def SVR_mod(self,imgpath,modpath = 'org'):
         """
-        @brief: Use SVR to get BMI value
+        @brief: Use SVR to get BMI value.
         @param: 
-            imgpath: The path of the image that needs to be measured
+            imgpath: The path of the image that needs to be measured.
+            modpath: The path of SVR model.
         @return:
-            img_y: Predicted value of BMI
+            img_y: Predicted value of BMI.
         """
         rd = RD.create_readdata()
         img_x = rd.get_image_x(imgpath)
         if len(img_x) != 0:
             x,y = self.get_data()
             X_train, X_test, Y_train, Y_test = train_test_split(x,y,test_size = 0.1)
-            regr = svm.SVR(kernel='linear')
+            if modpath == 'org':
+                regr = svm.SVR(kernel='linear')
+            else:
+                regr = joblib.load(modpath)
             regr.fit(X_train, Y_train)
             img_y = regr.predict(img_x)
             return img_y
         else:
             return 0
 
-    def GPR_mod(self,imgpath):
+    def GPR_mod(self,imgpath,modpath = 'org'):
         rd = RD.create_readdata()
         img_x = rd.get_image_x(imgpath)
         if len(img_x) != 0:
             x,y = self.get_data()
             X_train, X_test, Y_train, Y_test = train_test_split(x,y,test_size = 0.1)
-            kernel = DotProduct() + WhiteKernel()
-            gp = GaussianProcessRegressor(kernel=kernel)
+            if modpath == 'org':
+                kernel = DotProduct() + WhiteKernel()
+                gp = GaussianProcessRegressor(kernel=kernel)
+            else:
+                gp = joblib.load(modpath)
             gp.fit(X_train, Y_train)
             img_y = gp.predict(img_x)
             return img_y
         else:
             return 0
 
-    def LSR_mod(self,imgpath):
+    def LSR_mod(self,imgpath,modpath = 'org'):
         rd = RD.create_readdata()
         img_x = rd.get_image_x(imgpath)
         if len(img_x) != 0:
             x,y = self.get_data()
             X_train, X_test, Y_train, Y_test = train_test_split(x,y,test_size = 0.1)
-            reg = linear_model.LinearRegression()
+            if modpath == 'org':
+                reg = linear_model.LinearRegression()
+            else:
+                reg = joblib.load(modpath)
             reg.fit(X_train,Y_train)
             img_y = reg.predict(img_x)
             return img_y
         else:
             return 0
         
-    def MLPR_mod(self,imgpath):
+    def MLPR_mod(self,imgpath,modpath = 'org'):
         rd = RD.create_readdata()
         img_x = rd.get_image_x(imgpath)
         if len(img_x) != 0:
             x,y = self.get_data()
             X_train, X_test, Y_train, Y_test = train_test_split(x,y,test_size = 0.1)
-            mlp = MLPRegressor(
-                hidden_layer_sizes=(100,50,30), activation='relu',solver='adam',
-                alpha=0.01,max_iter=500)
-            
+            if modpath == 'org':
+                mlp = MLPRegressor(hidden_layer_sizes=(100,50,30), activation='relu',solver='adam',
+                    alpha=0.01,max_iter=500)
+            else:
+                mlp = joblib.load(modpath)
             mlp.fit(X_train,Y_train)
             img_y = mlp.predict(img_x)
             return img_y
