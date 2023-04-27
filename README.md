@@ -7,11 +7,11 @@
 ## Citation
 Please cite the below paper if the code was used in your research or development.
 
-'''
+```
     @inproceedings{
     title={Facial Landmark based BMI Analysis for Pervasive Health Informatics},
     author={Wang, Yujin and Jin, Zhi and Huang, Jia and Wang, Wenjin},
     booktitle={2023 45th Annual International Conference of the IEEE Engineering in Medicine & Biology Conference (EMBC).},
     year={2023}
     }
-'''
+```
