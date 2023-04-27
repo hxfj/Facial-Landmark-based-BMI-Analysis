@@ -4,3 +4,14 @@
 ## Example
 - We provided a image example in src/example and demonstrated the entire process in the main.py.
 - You can also use the saved model to subtract the time for reading data and training, we only provided the SVR_lm_BMI.pkl and demonstrated it in main.py.
+## Citation
+Please cite the below paper if the code was used in your research or development.
+
+'''
+    @inproceedings{
+    title={Facial Landmark based BMI Analysis for Pervasive Health Informatics},
+    author={Wang, Yujin and Jin, Zhi and Huang, Jia and Wang, Wenjin},
+    booktitle={2023 45th Annual International Conference of the IEEE Engineering in Medicine & Biology Conference (EMBC).},
+    year={2023}
+    }
+'''
